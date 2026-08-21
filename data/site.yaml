@@ -20,6 +20,10 @@ magic_castle::site::all:
   - yum_cron
 
 magic_castle::site::tags:
+  ood:
+    - profile::nfs
+    - profile::slurm::submitter
+    - profile::ood
   dtn:
     - profile::globus
     - profile::nfs
