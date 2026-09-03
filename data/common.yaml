@@ -424,3 +424,23 @@ yum_cron::extra_configs:
     value: "yum_cron@%{lookup('terraform.data.domain_name')}"
   'email/email_from':
     value: "yum_cron@%{lookup('terraform.data.domain_name')}"
+
+openondemand::repo_release: '4.2'
+openondemand::servername: "%{lookup('terraform.tag_ip.ood.0')}"
+openondemand::oidc_settings:
+    OIDCXForwardedHeaders: "X-Forwarded-Proto X-Forwarded-Host"
+openondemand::ssl:
+  - "SSLCertificateFile /etc/pki/tls/certs/httpd.crt"
+  - "SSLCertificateKeyFile /etc/pki/tls/private/httpd.key"
+openondemand::auth_type: 'dex'
+openondemand::host_regex: '[\w.-]+\.ubc\.ca'
+openondemand::node_uri: '/node'
+openondemand::rnode_uri: '/rnode'
+openondemand::clusters:
+    my-cluster:
+        cluster_title: "My Cluster"
+        login_host: "%{lookup('terraform.data.cluster_name')}.%{lookup('terraform.data.domain_name')}"
+        job_adapter: "slurm"
+        job_cluster: "%{alias('terraform.data.cluster_name')}"
+        job_bin: "/opt/software/slurm/bin"
+        job_conf: "/etc/slurm/slurm.conf"

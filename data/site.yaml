@@ -23,7 +23,7 @@ magic_castle::site::tags:
   ood:
     - profile::nfs
     - profile::slurm::submitter
-    - profile::ood
+    - profile::ood::web
   dtn:
     - profile::globus
     - profile::nfs
@@ -59,6 +59,7 @@ magic_castle::site::tags:
     - profile::prometheus::slurm_job_exporter
     - profile::nfs
     - profile::software_stack
+    - profile::ood::node
   nfs:
     - profile::nfs
     - profile::cvmfs::alien_cache
