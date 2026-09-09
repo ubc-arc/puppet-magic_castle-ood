@@ -75,6 +75,10 @@ class profile::ood::web {
 class profile::ood::node {
   include epel
 
+  package { '@base-x':
+    ensure => 'installed',
+  }
+
   $xfce_packages = [
     'thunar',
     'xfce4-panel',
