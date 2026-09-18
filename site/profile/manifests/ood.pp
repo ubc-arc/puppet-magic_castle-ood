@@ -9,7 +9,7 @@ class profile::ood::web {
 
   # Create the HTTP service principal in FreeIPA and generate the interal SSL cert.
   $ipa_domain = lookup('profile::freeipa::base::ipa_domain')
-  $fqdn = "${lookup('terraform.tag_ip.ood.0')}.int.${ipa_domain}"
+  $fqdn = "${facts['networking']['hostname']}.${ipa_domain}"
   $service_name = "HTTP/${fqdn}"
   $ipa_passwd = lookup('profile::freeipa::server::admin_password')
   $getcert_command = @("EOT")
