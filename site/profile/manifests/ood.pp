@@ -35,7 +35,7 @@ class profile::ood::web {
     path        => ['/bin', '/usr/bin', '/sbin', '/usr/sbin'],
   }
   
-  $generated_passphrase = Sensitive(fqdn_rand_string(32))
+  $generated_passphrase = Sensitive(stdlib::fqdn_rand_string(32))
   $base_dn = join(split($ipa_domain, '[.]').map |$dc| { "dc=${dc}" }, ',')
   $dex_ldap_connector = {
     type   => 'ldap',
