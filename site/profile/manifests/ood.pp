@@ -32,8 +32,6 @@ class profile::ood::web {
     path        => ['/bin', '/usr/bin', '/sbin', '/usr/sbin'],
   }
 
-  include openondemand
-
   $base_dn = join(split($ipa_domain, '[.]').map |$dc| { "dc=${dc}" }, ',')
   $dex_ldap_connector = {
     type   => 'ldap',
