@@ -73,7 +73,7 @@ class profile::ood::web {
     dex_config => {
       'connectors' => [$dex_ldap_connector],
     },
-    oidc_crypto_passphrase => $generated_passphrase,
+    oidc_crypto_passphrase => $generated_passphrase.unwrap,
   }
 }
 
