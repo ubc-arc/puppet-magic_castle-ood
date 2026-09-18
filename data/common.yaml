@@ -427,8 +427,6 @@ yum_cron::extra_configs:
 
 openondemand::repo_release: '4.2'
 openondemand::servername: "%{lookup('terraform.tag_ip.ood.0')}"
-openondemand::oidc_settings:
-    OIDCXForwardedHeaders: "X-Forwarded-Proto X-Forwarded-Host"
 openondemand::ssl:
   - "SSLCertificateFile /etc/pki/tls/certs/httpd.crt"
   - "SSLCertificateKeyFile /etc/pki/tls/private/httpd.key"
