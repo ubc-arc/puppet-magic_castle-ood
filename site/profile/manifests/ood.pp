@@ -2,6 +2,10 @@
 # for cluster user access.
 
 class profile::ood::web {
+  package { 'mod_lua':
+    ensure => 'installed',
+  }
+
   file { "/usr/bin/kinit_wrapper":
     source  => 'puppet:///modules/profile/freeipa/kinit_wrapper',
     mode    => '0755',
