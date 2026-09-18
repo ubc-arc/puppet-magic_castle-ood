@@ -67,8 +67,10 @@ class profile::ood::web {
     },
   }
 
-  class { 'openondemand::dex_config':
-    connectors => [$dex_ldap_connector]
+  class { 'openondemand':
+    dex_config => {
+      'connectors' => [$dex_ldap_connector],
+    },
   }
 }
 
