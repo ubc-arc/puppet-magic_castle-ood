@@ -2,7 +2,10 @@
 # for cluster user access.
 
 class profile::ood::web {
-  include profile::freeipa
+  file { "/usr/bin/kinit_wrapper":
+    source  => 'puppet:///modules/profile/freeipa/kinit_wrapper',
+    mode    => '0755',
+  }
 
   # Create the HTTP service principal in FreeIPA and generate the interal SSL cert.
   $ipa_domain = lookup('profile::freeipa::base::ipa_domain')
