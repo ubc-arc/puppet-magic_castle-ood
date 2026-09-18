@@ -34,7 +34,8 @@ class profile::ood::web {
     environment => ["IPA_ADMIN_PASSWD=${ipa_passwd}"],
     path        => ['/bin', '/usr/bin', '/sbin', '/usr/sbin'],
   }
-
+  
+  $generated_passphrase = Sensitive(fqdn_rand_string(32))
   $base_dn = join(split($ipa_domain, '[.]').map |$dc| { "dc=${dc}" }, ',')
   $dex_ldap_connector = {
     type   => 'ldap',
@@ -72,6 +73,7 @@ class profile::ood::web {
     dex_config => {
       'connectors' => [$dex_ldap_connector],
     },
+    oidc_crypto_passphrase => $generated_passphrase,
   }
 }
 
