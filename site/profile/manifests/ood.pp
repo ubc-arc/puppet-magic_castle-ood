@@ -23,7 +23,7 @@ class profile::ood::web {
     -k /etc/pki/tls/private/httpd.key \
     -K '${service_name}' \
     -D '${fqdn}' \
-    -A '${facts['ipaddress']}'
+    -A ${facts['networking']['ip']}
     |EOT
   exec { 'ood_getcert':
     command     => $getcert_command,
