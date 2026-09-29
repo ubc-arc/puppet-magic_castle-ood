@@ -17,14 +17,16 @@ class profile::ood::web {
   $service_name = "HTTP/${fqdn}"
   $ipa_passwd = lookup('profile::freeipa::server::admin_password')
   $getcert_command = @("EOT")
+    kinit_wrapper ipa host-add "${fqdn}" --ip-address="${facts['networking']['ip']}" --force && \
     kinit_wrapper ipa service-add "${service_name}" && \
-    kinit_wrapper ipa-getcert request \
+    kinit_wrapper ipa service-add-host "${service_name}" --hosts="${fqdn}" && \
+    kinit_wrapper ipa-getcert request -r \
     -f /etc/pki/tls/certs/httpd.crt \
     -k /etc/pki/tls/private/httpd.key \
-    -K '${service_name}' \
-    -D '${fqdn}' \
-    -A ${facts['networking']['ip']}
-    |EOT
+    -K "${service_name}" \
+    -D "${fqdn}" \
+    -A "${facts['networking']['ip']}"
+    | EOT
   exec { 'ood_getcert':
     command     => $getcert_command,
     creates     => [
