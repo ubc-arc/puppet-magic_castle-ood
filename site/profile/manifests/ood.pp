@@ -12,14 +12,39 @@ class profile::ood::web {
   }
 
   # Create the HTTP service principal in FreeIPA and generate the interal SSL cert.
+  $reverse_zone = profile::getreversezone()
+  $clean_zone = chop($reverse_zone)
+  $ptr_record = profile::getptrrecord()
   $ipa_domain = lookup('profile::freeipa::base::ipa_domain')
   $fqdn = "${facts['networking']['hostname']}.${ipa_domain}"
   $service_name = "HTTP/${fqdn}"
   $ipa_passwd = lookup('profile::freeipa::server::admin_password')
+  
+  $service_register_script = @("EOF")
+    api.Command.batch(
+      { 'method': 'dnsrecord_add',         'params': [['${clean_zone}', '${ptr_record}'], {'ptrrecord' : '${fqdn}.'}]},
+      { 'method': 'service_add',           'params': [['${service_name}'], {}]},
+  )
+  | EOF
+
+  file { "/etc/ipa/ipa_register_service.py":
+    content => $service_register_script,
+    require => File['/etc/ipa'],
+  }
+
+  exec { 'ipa_register_service':
+    command     => 'kinit_wrapper ipa console /etc/ipa/ipa_register_service.py',
+    require     => [
+      File['/etc/ipa/ipa_register_service.py'],
+      File['/usr/bin/kinit_wrapper'],
+      Exec['ipa-install'],
+    ],
+    subscribe   => File['/etc/ipa/ipa_register_service.py'],
+    environment => ["IPA_ADMIN_PASSWD=${ipa_passwd}"],
+    path        => ['/bin', '/usr/bin', '/sbin','/usr/sbin'],
+  }
+  
   $getcert_command = @("EOT")
-    kinit_wrapper ipa host-add "${fqdn}" --ip-address="${facts['networking']['ip']}" --force && \
-    kinit_wrapper ipa service-add "${service_name}" && \
-    kinit_wrapper ipa service-add-host "${service_name}" --hosts="${fqdn}" && \
     kinit_wrapper ipa-getcert request -r \
     -f /etc/pki/tls/certs/httpd.crt \
     -k /etc/pki/tls/private/httpd.key \
@@ -27,6 +52,7 @@ class profile::ood::web {
     -D "${fqdn}" \
     -A "${facts['networking']['ip']}"
     | EOT
+
   exec { 'ood_getcert':
     command     => $getcert_command,
     creates     => [
@@ -37,6 +63,7 @@ class profile::ood::web {
       File['/etc/ood'],
       File['/usr/bin/kinit_wrapper'],
       Exec['ipa-install'],
+      Exec['ipa_register_service'],
     ],
     environment => ["IPA_ADMIN_PASSWD=${ipa_passwd}"],
     path        => ['/bin', '/usr/bin', '/sbin', '/usr/sbin'],
@@ -49,7 +76,7 @@ class profile::ood::web {
     id     => 'ldap',
     name   => 'LDAP',
     config => {
-      host               => "%{lookup('profile::reverse_proxy::subdomains.ipa')}:636",
+      host               => "${lookup('profile::reverse_proxy::subdomains.ipa')}:636",
       insecureSkipVerify => true,
       bindDN             => "uid=admin,cn=users,cn=accounts,${base_dn}",
       bindPW             => "${ipa_passwd}",
@@ -76,7 +103,8 @@ class profile::ood::web {
     },
   }
 
-  class { 'openondemand':
+  Exec['ood_getcert']
+  -> class { 'openondemand':
     dex_config => {
       'connectors' => [$dex_ldap_connector],
     },
