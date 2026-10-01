@@ -11,7 +11,7 @@ class profile::ood::web {
     mode    => '0755',
   }
 
-  # Create the HTTP service principal in FreeIPA and generate the interal SSL cert.
+  # Create the HTTP service principal in FreeIPA and generate the internal SSL cert.
   $reverse_zone = profile::getreversezone()
   $clean_zone = chop($reverse_zone)
   $ptr_record = profile::getptrrecord()
@@ -34,12 +34,12 @@ class profile::ood::web {
 
   exec { 'ipa_register_service':
     command     => 'kinit_wrapper ipa console /etc/ipa/ipa_register_service.py',
+    unless => "kinit_wrapper ipa service-show '${service_name}' >/dev/null 2>&1",
     require     => [
       File['/etc/ipa/ipa_register_service.py'],
       File['/usr/bin/kinit_wrapper'],
       Exec['ipa-install'],
     ],
-    subscribe   => File['/etc/ipa/ipa_register_service.py'],
     environment => ["IPA_ADMIN_PASSWD=${ipa_passwd}"],
     path        => ['/bin', '/usr/bin', '/sbin','/usr/sbin'],
   }
