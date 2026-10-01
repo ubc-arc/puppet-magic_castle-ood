@@ -22,10 +22,10 @@ class profile::ood::web {
   
   $service_register_script = @("EOF")
     api.Command.batch(
-      { 'method': 'dnsrecord_add',         'params': [['${clean_zone}', '${ptr_record}'], {'ptrrecord' : '${fqdn}.'}]},
-      { 'method': 'service_add',           'params': [['${service_name}'], {}]},
-  )
-  | EOF
+      { 'method': 'dnsrecord_add', 'params': [['${clean_zone}', '${ptr_record}'], {'ptrrecord' : '${fqdn}.'}]},
+      { 'method': 'service_add', 'params': [['${service_name}'], {}]},
+    )
+    | EOF
 
   file { "/etc/ipa/ipa_register_service.py":
     content => $service_register_script,
