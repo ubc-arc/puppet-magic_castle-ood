@@ -102,13 +102,15 @@ class profile::ood::web {
     },
   }
 
-  Exec['ood_getcert']
-  -> class { 'openondemand':
+  class { 'openondemand':
     dex_config => {
       'connectors' => [$dex_ldap_connector],
     },
     oidc_crypto_passphrase => $generated_passphrase.unwrap,
   }
+
+  Exec['ood_getcert']
+    -> File['/etc/ood/config/ood_portal.yml']
 }
 
 class profile::ood::node {
