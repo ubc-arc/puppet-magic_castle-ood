@@ -55,10 +55,7 @@ class profile::ood::web {
 
   exec { 'ood_getcert':
     command     => $getcert_command,
-    creates     => [
-      '/etc/pki/tls/certs/httpd.crt',
-      '/etc/pki/tls/private/httpd.key'
-    ],
+    creates     => '/etc/pki/tls/certs/httpd.crt',
     require     => [
       File['/usr/bin/kinit_wrapper'],
       Exec['ipa-install'],
@@ -109,7 +106,17 @@ class profile::ood::web {
     oidc_crypto_passphrase => $generated_passphrase.unwrap,
   }
 
+  exec { 'wait_for_httpd_cert':
+    command => '/usr/bin/test -s /etc/pki/tls/certs/httpd.crt',
+    tries => 24,
+    try_sleep => 5,
+    refreshonly => true,
+    require => Exec['ood_getcert'],
+    path => ['/bin', '/usr/bin', '/sbin', '/usr/sbin'],
+  }
+ 
   Exec['ood_getcert']
+    ~> Exec['wait_for_httpd_cert']
     -> File['/etc/ood/config/ood_portal.yml']
 }
 
