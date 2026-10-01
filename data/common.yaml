@@ -436,8 +436,8 @@ openondemand::node_uri: '/node'
 openondemand::rnode_uri: '/rnode'
 openondemand::clusters:
     my-cluster:
-        cluster_title: "My Cluster"
-        login_host: "%{lookup('terraform.data.cluster_name')}.%{lookup('terraform.data.domain_name')}"
+        cluster_title: "%{alias('terraform.data.cluster_name')}"
+        login_host: "%{alias('terraform.tag_hostname.ood.0')}.int.%{alias('terraform.data.domain_name')}"
         job_adapter: "slurm"
         job_cluster: "%{alias('terraform.data.cluster_name')}"
         job_bin: "/opt/software/slurm/bin"
