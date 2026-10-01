@@ -426,7 +426,7 @@ yum_cron::extra_configs:
     value: "yum_cron@%{lookup('terraform.data.domain_name')}"
 
 openondemand::repo_release: '4.2'
-openondemand::servername: "%{lookup('terraform.tag_ip.ood.0')}"
+openondemand::servername: "%{alias('terraform.tag_hostname.ood.0')}.int.%{alias('terraform.data.domain_name')}"
 openondemand::ssl:
   - "SSLCertificateFile /etc/pki/tls/certs/httpd.crt"
   - "SSLCertificateKeyFile /etc/pki/tls/private/httpd.key"
