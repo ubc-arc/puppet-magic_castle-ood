@@ -29,7 +29,7 @@ class profile::ood::web {
 
   file { "/etc/ipa/ipa_register_service.py":
     content => $service_register_script,
-    require => File['/etc/ipa'],
+    require => Exec['ipa-install'],
   }
 
   exec { 'ipa_register_service':
