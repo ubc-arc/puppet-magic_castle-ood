@@ -60,7 +60,6 @@ class profile::ood::web {
       '/etc/pki/tls/private/httpd.key'
     ],
     require     => [
-      File['/etc/ood'],
       File['/usr/bin/kinit_wrapper'],
       Exec['ipa-install'],
       Exec['ipa_register_service'],
