@@ -104,7 +104,7 @@ class profile::ood::web {
       'connectors' => [$dex_ldap_connector],
     },
     oidc_crypto_passphrase => $generated_passphrase.unwrap,
-    host_regex => '[\w.-]+\.' + regsubst(lookup('terraform.data.domain_name'), '\.', '\\.', 'G'),
+    host_regex => join(['[\w.-]+\.',regsubst(lookup('terraform.data.domain_name'), '\.', '\\.', 'G')])
   }
 
   exec { 'wait_for_httpd_cert':
