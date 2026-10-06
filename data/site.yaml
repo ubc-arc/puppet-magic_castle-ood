@@ -23,6 +23,8 @@ magic_castle::site::tags:
   ood:
     - profile::nfs
     - profile::slurm::submitter
+    - profile::ssh::hostbased_auth::client
+    - profile::ssh::hostbased_auth::server
     - profile::ood::web
   dtn:
     - profile::globus
