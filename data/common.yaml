@@ -434,7 +434,7 @@ openondemand::auth_type: 'dex'
 openondemand::node_uri: '/node'
 openondemand::rnode_uri: '/rnode'
 openondemand::clusters:
-    my-cluster:
+    mc_cluster:
         cluster_title: "%{alias('terraform.data.cluster_name')}"
         login_host: "%{facts.networking.hostname}.%{lookup('profile::freeipa::base::ipa_domain')}"
         job_adapter: "slurm"
