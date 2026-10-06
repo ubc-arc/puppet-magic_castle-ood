@@ -425,6 +425,11 @@ yum_cron::extra_configs:
   'email/email_from':
     value: "yum_cron@%{lookup('terraform.data.domain_name')}"
 
+profile::ssh::hostbased_auth::server::shosts_tags:
+  - 'login'
+  - 'node'
+  - 'ood'
+
 openondemand::repo_release: '4.2'
 openondemand::servername: "%{facts.networking.hostname}.%{lookup('profile::freeipa::base::ipa_domain')}"
 openondemand::ssl:
