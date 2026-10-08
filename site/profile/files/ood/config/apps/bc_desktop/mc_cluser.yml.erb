@@ -1,0 +1,36 @@
+<%-
+  groups = OodSupport::User.new.groups.sort_by(&:id).tap { |groups|
+    groups.unshift(groups.delete(OodSupport::Process.group))
+  }.map(&:name).grep(/(ctb|def|rpp|rrg)-\w+-\d+$/)
+-%>
+---
+title: "Cluster Desktop"
+cluster: "mc_cluster"
+submit: "submit/mc_submit.yml.erb"
+form:
+  - desktop
+  - bc_account
+  - custom_queue
+  - bc_num_hours
+  - num_cores
+attributes:
+  desktop: "xfce"
+  bc_account:
+    label: "Allocation"
+    widget: select
+    options:
+      <%- groups.each do |group| %>
+      - "<%= group %>"
+      <%- end %>
+  bc_num_hours:
+    max: 4
+  num_cores:
+    widget: "number_field"
+    label: "Number of cores"
+    value: 1
+    help: |
+      Number of cores on node type (4 GB per core unless requesting whole
+      node). Leave blank if requesting full node.
+    min: 1
+    max: 4
+    step: 1
