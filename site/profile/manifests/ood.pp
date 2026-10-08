@@ -154,10 +154,7 @@ class profile::ood::node {
     baseurl       => 'https://packagecloud.io/dcommander/turbovnc/rpm_any/rpm_any/$basearch',
     repo_gpgcheck => 1,
     gpgcheck      => 1,
-    gpgkey        => [
-      'https://packagecloud.io/dcommander/turbovnc/gpgkey',
-      'https://raw.githubusercontent.com/TurboVNC/repo/main/VGL-GPG-KEY',
-    ],
+    gpgkey        => 'https://packagecloud.io/dcommander/turbovnc/gpgkey https://raw.githubusercontent.com/TurboVNC/repo/main/VGL-GPG-KEY',
     enabled       => 1,
     sslverify     => 1,
   }
