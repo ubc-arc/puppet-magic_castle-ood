@@ -1,7 +1,7 @@
 <%-
   groups = OodSupport::User.new.groups.sort_by(&:id).tap { |groups|
     groups.unshift(groups.delete(OodSupport::Process.group))
-  }.map(&:name).grep(/(ctb|def|rpp|rrg)-\w+-\d+$/)
+  }.map(&:name).grep(/(ctb|def|rpp|rrg)-\w+$/)
 -%>
 ---
 title: "Cluster Desktop"
@@ -10,7 +10,6 @@ submit: "submit/mc_submit.yml.erb"
 form:
   - desktop
   - bc_account
-  - custom_queue
   - bc_num_hours
   - num_cores
 attributes:
