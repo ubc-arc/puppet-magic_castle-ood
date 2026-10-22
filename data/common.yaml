@@ -431,7 +431,9 @@ profile::ssh::hostbased_auth::server::shosts_tags:
   - 'ood'
 
 openondemand::repo_release: '4.2'
-openondemand::servername: "%{facts.networking.hostname}.%{lookup('profile::freeipa::base::ipa_domain')}"
+openondemand::servername: "ondemand.%{lookup('terraform.data.domain_name')}"
+openondemand::server_aliases:
+  - "%{facts.networking.hostname}.%{lookup('profile::freeipa::base::ipa_domain')}"
 openondemand::apps_config_source: 'puppet:///modules/profile/ood/config/apps'
 openondemand::ssl:
   - "SSLCertificateFile /etc/pki/tls/certs/httpd.crt"
@@ -447,3 +449,6 @@ openondemand::clusters:
         job_cluster: "%{alias('terraform.data.cluster_name')}"
         job_bin: "/opt/software/slurm/bin"
         job_conf: "/etc/slurm/slurm.conf"
+openondemand::install_apps:
+    module-browser:
+        mode: '0700'
